@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Scroll Reels</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 10px; width: 200px; }
+    label { display: block; margin-top: 10px; }
+    input[type="number"] { width: 100%; }
+  </style>
+</head>
+<body>
+  <h3>Tự động cuộn</h3>
+  <label>
+    <input type="checkbox" id="toggle"> Bật tự động cuộn
+  </label>
+  <label>
+    Độ trễ (ms):
+    <input type="number" id="delay" min="0" step="100" value="500">
+  </label>
+</body>
+<script src="popup.js"></script>
+</html>
