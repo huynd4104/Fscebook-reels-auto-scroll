@@ -4,26 +4,127 @@
   <meta charset="UTF-8">
   <title>Auto Scroll Reels</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 10px; width: 200px; }
-    label { display: block; margin-top: 10px; }
-    input[type="number"] { width: 100%; }
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 15px; 
+      width: 250px; 
+      background: #f5f5f5;
+    }
+    
+    .section {
+      background: white;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .section h4 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .platform-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .platform-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px;
+      border-radius: 4px;
+      background: #f8f9fa;
+    }
+    
+    .platform-item label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    
+    .platform-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+    }
+    
+    .facebook-icon {
+      background: #1877f2;
+    }
+    
+    .tiktok-icon {
+      background: linear-gradient(45deg, #ff0050, #00f2ea);
+    }
+    
+    label { 
+      display: block; 
+      margin-top: 8px; 
+      font-size: 13px;
+      color: #555;
+    }
+    
+    input[type="number"] { 
+      width: 95%; 
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      margin: 5px 0;
+    }
+    
+    #volume-value {
+      font-weight: bold;
+      color: #666;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
-  <h3>Tự động cuộn</h3>
-  <label>
-    <input type="checkbox" id="toggle"> Bật tự động cuộn
-  </label>
-  <label>
-    Độ trễ (ms):
-    <input type="number" id="delay" min="0" step="100" value="500">
-  </label>
-<label>
-  Âm lượng: <span id="volume-value">10%</span>
-  <input type="range" id="volume" min="0.1" max="1" step="0.01" value="0.1">
-  <br>
-  <input type="checkbox" id="realtime-volume" style="margin-top: 5px;"> Realtime Volume
-</label>
-</body>
+  <div class="section">
+    <h4>🎯 Tự động cuộn</h4>
+    <div class="platform-controls">
+      <div class="platform-item">
+        <div class="platform-icon facebook-icon"></div>
+        <label>
+          <input type="checkbox" id="facebook-toggle"> Facebook Reels
+        </label>
+      </div>
+      <div class="platform-item">
+        <div class="platform-icon tiktok-icon"></div>
+        <label>
+          <input type="checkbox" id="tiktok-toggle"> TikTok
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h4>⚙️ Cài đặt</h4>
+    <label>
+      Độ trễ (ms):
+      <input type="number" id="delay" min="0" step="100" value="500">
+    </label>
+    
+    <label>
+      Âm lượng: <span id="volume-value">10%</span>
+      <input type="range" id="volume" min="0.1" max="1" step="0.01" value="0.1">
+      <br>
+      <input type="checkbox" id="realtime-volume" style="margin-top: 5px;"> Realtime Volume
+    </label>
+  </div>
+
 <script src="popup.js"></script>
+</body>
 </html>
