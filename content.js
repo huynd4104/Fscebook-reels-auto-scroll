@@ -4,14 +4,22 @@ let savedVolume = 1.0;
 let realtimeVolumeEnabled = true;
 
 function clickNextButton() {
-  const nextButton = document.querySelector('[aria-label="Thẻ tiếp theo"][role="button"]');
+  // Facebook Reels
+  let nextButton = document.querySelector('[aria-label="Thẻ tiếp theo"][role="button"]');
+  
+  // Nếu không tìm thấy trên Facebook, thử trên TikTok
+  if (!nextButton) {
+    nextButton = document.querySelector('button[data-e2e="arrow-right"]');
+  }
+
   if (nextButton) {
-    console.log("Đã tìm thấy nút 'Thẻ tiếp theo', đang click...");
+    console.log("Đã tìm thấy nút Next, đang click...");
     nextButton.click();
   } else {
-    console.warn("Không tìm thấy nút 'Thẻ tiếp theo'!");
+    console.warn("Không tìm thấy nút Next!");
   }
 }
+
 
 function watchReelVideos() {
   const observer = new MutationObserver(() => {
