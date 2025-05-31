@@ -165,15 +165,25 @@
     <h4>⚙️ Cài đặt</h4>
     <label>
       Độ trễ (ms):
-      <input type="number" id="delay" min="0" step="100" value="500">
+      <input type="number" id="delay" min="0" step="100" value="100">
     </label>
     
     <label>
       Âm lượng: <span id="volume-value">10%</span>
       <input type="range" id="volume" min="0.1" max="1" step="0.01" value="0.1">
       <br>
-      <input type="checkbox" id="realtime-volume" style="margin-top: 5px;"> Realtime Volume
+      <input type="checkbox" id="realtime-volume" style="margin-top: 5px;"> Volume Control
     </label>
+  </div>
+
+  <div class="section" style="text-align: center; padding: 8px;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <img src="avatar.png" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #e0e0e0;">
+      <div>
+        <div style="font-size: 11px; color: #888; margin-bottom: 4px;">Developed by</div>
+        <div style="font-size: 13px; font-weight: bold; color: #555;">양위 - RinNguyen</div>
+      </div>
+    </div>
   </div>
 
 <script src="popup.js"></script>
