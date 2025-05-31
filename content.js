@@ -1,6 +1,8 @@
 let autoScrollEnabled = true;
 let facebookAutoScrollEnabled = true;
 let tiktokAutoScrollEnabled = true;
+let facebookReplayEnabled = false;
+let tiktokReplayEnabled = false;
 let delayTime = 100;
 let savedVolume = 1.0;
 let realtimeVolumeEnabled = true;
@@ -25,6 +27,16 @@ function isAutoScrollEnabledForCurrentPlatform() {
   return autoScrollEnabled; // fallback cho backward compatibility
 }
 
+function isReplayEnabledForCurrentPlatform() {
+  const platform = getCurrentPlatform();
+  if (platform === 'facebook') {
+    return facebookReplayEnabled;
+  } else if (platform === 'tiktok') {
+    return tiktokReplayEnabled;
+  }
+  return false;
+}
+
 function clickNextButton() {
   // Facebook Reels
   let nextButton = document.querySelector('[aria-label="Thẻ tiếp theo"][role="button"]');
@@ -42,6 +54,14 @@ function clickNextButton() {
   }
 }
 
+function replayCurrentVideo(video) {
+  if (video) {
+    console.log("Đang replay video...");
+    video.currentTime = 0;
+    video.play();
+  }
+}
+
 function watchReelVideos() {
   const observer = new MutationObserver(() => {
     const videos = document.querySelectorAll("video");
@@ -55,7 +75,11 @@ function watchReelVideos() {
         }
 
         video.addEventListener("ended", () => {
-          if (isAutoScrollEnabledForCurrentPlatform()) {
+          if (isReplayEnabledForCurrentPlatform()) {
+            // Nếu replay được bật, phát lại video
+            setTimeout(() => replayCurrentVideo(video), delayTime);
+          } else if (isAutoScrollEnabledForCurrentPlatform()) {
+            // Nếu auto scroll được bật, chuyển video tiếp theo
             setTimeout(clickNextButton, delayTime);
           }
         });
@@ -70,6 +94,8 @@ chrome.storage.sync.get([
   "enabled", 
   "facebookEnabled", 
   "tiktokEnabled", 
+  "facebookReplayEnabled",
+  "tiktokReplayEnabled",
   "delay", 
   "volume", 
   "realtimeVolume"
@@ -78,6 +104,8 @@ chrome.storage.sync.get([
   autoScrollEnabled = data.enabled ?? true;
   facebookAutoScrollEnabled = data.facebookEnabled ?? data.enabled ?? true;
   tiktokAutoScrollEnabled = data.tiktokEnabled ?? data.enabled ?? true;
+  facebookReplayEnabled = data.facebookReplayEnabled ?? false;
+  tiktokReplayEnabled = data.tiktokReplayEnabled ?? false;
   
   delayTime = parseInt(data.delay) || 100;
   savedVolume = typeof data.volume === "number" ? data.volume : 1.0;
@@ -98,6 +126,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
     if (typeof message.tiktokEnabled !== 'undefined') {
       tiktokAutoScrollEnabled = message.tiktokEnabled;
+    }
+    if (typeof message.facebookReplayEnabled !== 'undefined') {
+      facebookReplayEnabled = message.facebookReplayEnabled;
+    }
+    if (typeof message.tiktokReplayEnabled !== 'undefined') {
+      tiktokReplayEnabled = message.tiktokReplayEnabled;
     }
     
     delayTime = message.delay;
