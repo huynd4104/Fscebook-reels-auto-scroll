@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <title>Auto Scroll Reels</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      padding: 5px 5px 0px 5px; 
-      width: 280px; 
+    body {
+      font-family: Arial, sans-serif;
+      padding: 5px 5px 0px 5px;
+      width: 280px;
       background: #f5f5f5;
     }
-    
+
     .section {
       background: white;
       padding: 12px;
       margin-bottom: 10px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
+
     .section h4 {
       margin: 0 0 10px 0;
       color: #333;
       font-size: 14px;
       font-weight: bold;
     }
-    
+
     .platform-controls {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    
+
     .platform-item {
       border: 1px solid #e0e0e0;
       border-radius: 6px;
       padding: 10px;
       background: #f8f9fa;
     }
-    
+
     .platform-header {
       display: flex;
       align-items: center;
@@ -47,28 +48,28 @@
       font-weight: bold;
       font-size: 13px;
     }
-    
+
     .platform-icon {
       width: 16px;
       height: 16px;
       border-radius: 3px;
     }
-    
+
     .facebook-icon {
       background: #1877f2;
     }
-    
+
     .tiktok-icon {
       background: linear-gradient(45deg, #ff0050, #00f2ea);
     }
-    
+
     .platform-options {
       display: flex;
       flex-direction: column;
       gap: 6px;
       margin-left: 24px;
     }
-    
+
     .option-item {
       display: flex;
       align-items: center;
@@ -79,49 +80,41 @@
       transition: background-color 0.2s ease;
       user-select: none;
     }
-    
+
     .option-item:hover {
       background-color: rgba(0, 0, 0, 0.05);
     }
-    
+
     .option-item.selected {
       background-color: rgba(24, 119, 242, 0.1);
       border: 1px solid rgba(24, 119, 242, 0.3);
     }
-    
+
     .option-item label {
       margin: 0;
       cursor: pointer;
       font-size: 12px;
       color: #555;
-      pointer-events: none; /* Ngăn double-click event */
+      pointer-events: none;
     }
-    
+
     .option-item input[type="radio"] {
       margin: 0;
-      pointer-events: none; /* Ngăn double-click event */
+      pointer-events: none;
     }
-    
-    label { 
-      display: block; 
-      margin-top: 8px; 
+
+    label {
+      display: block;
+      margin-top: 8px;
       font-size: 13px;
       color: #555;
     }
-    
-    input[type="number"] { 
-      width: 95%; 
-      padding: 5px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 13px;
-    }
-    
+
     input[type="range"] {
       width: 100%;
       margin: 5px 0;
     }
-    
+
     #volume-value {
       font-weight: bold;
       color: #666;
@@ -160,9 +153,9 @@
       border: 1px solid #404040;
       border-radius: 28px;
       transition: all 0.3s ease;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.3),
-        0 2px 8px rgba(0,0,0,0.2);
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     .cyber-slider:before {
@@ -176,41 +169,41 @@
       border: 1px solid #999;
       border-radius: 50%;
       transition: all 0.3s ease;
-      box-shadow: 
-        0 2px 4px rgba(0,0,0,0.2),
-        inset 0 1px 2px rgba(255,255,255,0.3);
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
     }
 
-    .cyber-switch input:checked + .cyber-slider {
+    .cyber-switch input:checked+.cyber-slider {
       background: linear-gradient(145deg, #00d4ff, #0099cc);
       border-color: #00aadd;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.2),
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
         0 0 10px rgba(0, 212, 255, 0.3),
-        0 2px 8px rgba(0,0,0,0.2);
+        0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .cyber-switch input:checked + .cyber-slider:before {
+    .cyber-switch input:checked+.cyber-slider:before {
       transform: translateX(32px);
       background: linear-gradient(145deg, #ffffff, #f0f0f0);
-      box-shadow: 
-        0 2px 6px rgba(0,0,0,0.3),
-        inset 0 1px 2px rgba(255,255,255,0.5),
+      box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.5),
         0 0 8px rgba(0, 212, 255, 0.2);
     }
 
     .cyber-slider:hover {
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.3),
-        0 2px 8px rgba(0,0,0,0.3),
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.3),
         0 0 6px rgba(0, 212, 255, 0.1);
     }
 
-    .cyber-switch input:checked + .cyber-slider:hover {
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.2),
+    .cyber-switch input:checked+.cyber-slider:hover {
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
         0 0 15px rgba(0, 212, 255, 0.4),
-        0 2px 8px rgba(0,0,0,0.3);
+        0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     /* Cyber Switch Label */
@@ -223,28 +216,31 @@
       cursor: pointer;
     }
 
-    .cyber-switch input:checked ~ .cyber-switch-label {
+    .cyber-switch input:checked~.cyber-switch-label {
       color: #00aadd;
       text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
     }
 
     /* Animation for glow effect */
     @keyframes cyber-glow {
-      0%, 100% {
-        box-shadow: 
-          inset 0 2px 4px rgba(0,0,0,0.2),
+
+      0%,
+      100% {
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.2),
           0 0 10px rgba(0, 212, 255, 0.3),
-          0 2px 8px rgba(0,0,0,0.2);
+          0 2px 8px rgba(0, 0, 0, 0.2);
       }
+
       50% {
-        box-shadow: 
-          inset 0 2px 4px rgba(0,0,0,0.2),
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.2),
           0 0 15px rgba(0, 212, 255, 0.5),
-          0 2px 8px rgba(0,0,0,0.2);
+          0 2px 8px rgba(0, 0, 0, 0.2);
       }
     }
 
-    .cyber-switch input:checked + .cyber-slider {
+    .cyber-switch input:checked+.cyber-slider {
       animation: cyber-glow 2s ease-in-out infinite;
     }
 
@@ -305,17 +301,17 @@
       background: linear-gradient(145deg, #f0f0f0, #d0d0d0);
       border: 1px solid #999;
       cursor: pointer;
-      box-shadow: 
-        0 2px 4px rgba(0,0,0,0.2),
-        inset 0 1px 2px rgba(255,255,255,0.3);
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
       transition: all 0.2s ease;
     }
 
     input[type="range"]::-webkit-slider-thumb:hover {
       transform: scale(1.1);
-      box-shadow: 
-        0 3px 6px rgba(0,0,0,0.3),
-        inset 0 1px 2px rgba(255,255,255,0.4);
+      box-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4);
     }
 
     input[type="range"]::-moz-range-thumb {
@@ -325,9 +321,9 @@
       background: linear-gradient(145deg, #f0f0f0, #d0d0d0);
       border: 1px solid #999;
       cursor: pointer;
-      box-shadow: 
-        0 2px 4px rgba(0,0,0,0.2),
-        inset 0 1px 2px rgba(255,255,255,0.3);
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
     }
 
     /* Active volume control */
@@ -338,10 +334,10 @@
     .volume-section.enabled .volume-controls input[type="range"]::-webkit-slider-thumb {
       background: linear-gradient(145deg, #ffffff, #00d4ff);
       border-color: #00aadd;
-      box-shadow: 
-        0 2px 4px rgba(0,0,0,0.2),
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
         0 0 8px rgba(0, 212, 255, 0.3),
-        inset 0 1px 2px rgba(255,255,255,0.4);
+        inset 0 1px 2px rgba(255, 255, 255, 0.4);
     }
 
     /* NEW: Background Play Feature Styles */
@@ -392,11 +388,12 @@
       bottom: 3px;
     }
 
-    .bg-play-switch input:checked + .cyber-slider:before {
+    .bg-play-switch input:checked+.cyber-slider:before {
       transform: translateX(26px);
     }
   </style>
 </head>
+
 <body>
   <div class="section">
     <h4>🎯 Chế độ hoạt động</h4>
@@ -421,7 +418,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="platform-item">
         <div class="platform-header">
           <div class="platform-icon tiktok-icon"></div>
@@ -460,7 +457,7 @@
         </label>
       </div>
     </div>
-        
+
     <div class="volume-section" id="volume-section">
       <div class="volume-controls">
         <label>
@@ -473,7 +470,8 @@
 
   <div class="section" style="text-align: center; padding: 8px;">
     <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-      <img src="avatar.png" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #e0e0e0;">
+      <img src="avatar.png" alt="Avatar"
+        style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #e0e0e0;">
       <div>
         <div style="font-size: 11px; color: #888; margin-bottom: 4px;">Developed by</div>
         <div style="font-size: 13px; font-weight: bold; color: #555;">양휘 - RinNguyen</div>
@@ -481,6 +479,7 @@
     </div>
   </div>
 
-<script src="popup.js"></script>
+  <script src="popup.js"></script>
 </body>
+
 </html>

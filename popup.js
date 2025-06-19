@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Popup loaded - starting initialization");
-  
+
   const facebookOffRadio = document.getElementById("facebook-off");
   const facebookScrollRadio = document.getElementById("facebook-scroll");
   const facebookReplayRadio = document.getElementById("facebook-replay");
-  
+
   const tiktokOffRadio = document.getElementById("tiktok-off");
   const tiktokScrollRadio = document.getElementById("tiktok-scroll");
   const tiktokReplayRadio = document.getElementById("tiktok-replay");
-  
+
   const volumeSlider = document.getElementById("volume");
   const volumeValue = document.getElementById("volume-value");
   const realtimeCheckbox = document.getElementById("realtime-volume");
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateVolumeControlState() {
     const isEnabled = realtimeCheckbox.checked;
     volumeSlider.disabled = !isEnabled;
-    
+
     if (isEnabled) {
       volumeSection.classList.remove("disabled");
       volumeSection.classList.add("enabled");
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       volumeSection.classList.add("disabled");
       volumeSection.classList.remove("enabled");
     }
-    
+
     if (isEnabled) {
       const percentage = ((volumeSlider.value - volumeSlider.min) / (volumeSlider.max - volumeSlider.min)) * 100;
       volumeSlider.style.background = `linear-gradient(to right, #00d4ff 0%, #00d4ff ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
@@ -46,81 +46,79 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setUIFromSettings(data) {
     console.log("Setting UI from data:", data);
-    
+
     const facebookEnabled = data.facebookEnabled === true;
     const facebookReplayEnabled = data.facebookReplayEnabled === true;
-    
+
     console.log("Facebook - enabled:", facebookEnabled, "replay:", facebookReplayEnabled);
-    
+
     facebookOffRadio.checked = false;
     facebookScrollRadio.checked = false;
     facebookReplayRadio.checked = false;
-    
+
     if (facebookReplayEnabled) {
       facebookReplayRadio.checked = true;
       console.log("Set Facebook to Replay mode");
+      updateSelectedState(facebookReplayRadio);
     } else if (facebookEnabled) {
       facebookScrollRadio.checked = true;
       console.log("Set Facebook to Scroll mode");
+      updateSelectedState(facebookScrollRadio);
     } else {
       facebookOffRadio.checked = true;
       console.log("Set Facebook to Off mode");
+      updateSelectedState(facebookOffRadio);
     }
-    
-    updateSelectedState(facebookOffRadio);
-    updateSelectedState(facebookScrollRadio);
-    updateSelectedState(facebookReplayRadio);
-    
+
     const tiktokEnabled = data.tiktokEnabled === true;
     const tiktokReplayEnabled = data.tiktokReplayEnabled === true;
-    
+
     console.log("TikTok - enabled:", tiktokEnabled, "replay:", tiktokReplayEnabled);
-    
+
     tiktokOffRadio.checked = false;
     tiktokScrollRadio.checked = false;
     tiktokReplayRadio.checked = false;
-    
+
     if (tiktokReplayEnabled) {
       tiktokReplayRadio.checked = true;
       console.log("Set TikTok to Replay mode");
+      updateSelectedState(tiktokReplayRadio);
     } else if (tiktokEnabled) {
       tiktokScrollRadio.checked = true;
       console.log("Set TikTok to Scroll mode");
+      updateSelectedState(tiktokScrollRadio);
     } else {
       tiktokOffRadio.checked = true;
       console.log("Set TikTok to Off mode");
+      updateSelectedState(tiktokOffRadio);
     }
-    
-    updateSelectedState(tiktokOffRadio);
-    updateSelectedState(tiktokScrollRadio);
-    updateSelectedState(tiktokReplayRadio);
-    
+
     const volume = typeof data.volume === 'number' ? data.volume : 1.0;
     volumeSlider.value = volume;
     volumeValue.textContent = Math.round(volume * 100) + "%";
     console.log("Set volume to:", volume);
-    
+
     const realtimeVolume = data.realtimeVolume === true;
     realtimeCheckbox.checked = realtimeVolume;
     console.log("Set realtime volume to:", realtimeVolume);
-    
+
     updateVolumeControlState();
-    
+
     console.log("UI setup completed");
   }
 
   function loadSettings() {
     console.log("Loading settings...");
-    
+
     chrome.storage.sync.get(null, (syncData) => {
       console.log("Chrome storage sync data:", syncData);
-      
+
       if (chrome.runtime.lastError) {
         console.error("Chrome storage sync error:", chrome.runtime.lastError);
         loadFromLocalStorage();
         return;
       }
-      
+
       if (Object.keys(syncData).length > 0) {
         console.log("Found data in sync storage");
         setUIFromSettings(syncData);
@@ -130,17 +128,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-  
+
   function loadFromLocalStorage() {
     chrome.storage.local.get(null, (localData) => {
       console.log("Chrome storage local data:", localData);
-      
+
       if (chrome.runtime.lastError) {
         console.error("Chrome storage local error:", chrome.runtime.lastError);
         setDefaultSettings();
         return;
       }
-      
+
       if (Object.keys(localData).length > 0) {
         console.log("Found data in local storage");
         setUIFromSettings(localData);
@@ -150,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-  
+
   function setDefaultSettings() {
     console.log("Setting default settings");
     const defaultData = {
@@ -162,9 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
       volume: 1.0,
       realtimeVolume: false
     };
-    
+
     setUIFromSettings(defaultData);
-    
+
     chrome.storage.sync.set(defaultData, () => {
       console.log("Default settings saved");
     });
@@ -179,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "LABEL") {
         return;
       }
-      
+
       const radio = item.querySelector('input[type="radio"]');
       if (radio && !radio.checked) {
         radio.checked = true;
@@ -205,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSelectedState(facebookReplayRadio);
     sendSettings();
   });
-  
+
   tiktokOffRadio.addEventListener("change", () => {
     console.log("TikTok Off selected");
     updateSelectedState(tiktokOffRadio);
@@ -221,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSelectedState(tiktokReplayRadio);
     sendSettings();
   });
-  
+
   volumeSlider.addEventListener("input", () => {
     const volume = parseFloat(volumeSlider.value);
     volumeValue.textContent = Math.round(volume * 100) + "%";
@@ -229,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateVolumeControlState();
     sendSettings();
   });
-  
+
   realtimeCheckbox.addEventListener("change", () => {
     console.log("Realtime volume changed to:", realtimeCheckbox.checked);
     updateVolumeControlState();
@@ -238,10 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function sendSettings() {
     console.log("Sending settings...");
-    
+
     let facebookEnabled = false;
     let facebookReplayEnabled = false;
-    
+
     if (facebookScrollRadio.checked) {
       facebookEnabled = true;
       facebookReplayEnabled = false;
@@ -249,10 +247,10 @@ document.addEventListener("DOMContentLoaded", () => {
       facebookEnabled = false;
       facebookReplayEnabled = true;
     }
-    
+
     let tiktokEnabled = false;
     let tiktokReplayEnabled = false;
-    
+
     if (tiktokScrollRadio.checked) {
       tiktokEnabled = true;
       tiktokReplayEnabled = false;
@@ -260,19 +258,19 @@ document.addEventListener("DOMContentLoaded", () => {
       tiktokEnabled = false;
       tiktokReplayEnabled = true;
     }
-    
+
     const volume = parseFloat(volumeSlider.value) || 1.0;
     const realtimeVolume = realtimeCheckbox.checked;
     const enabled = facebookEnabled || tiktokEnabled || facebookReplayEnabled || tiktokReplayEnabled;
 
     const settings = {
-      enabled, 
-      facebookEnabled, 
+      enabled,
+      facebookEnabled,
       tiktokEnabled,
       facebookReplayEnabled,
       tiktokReplayEnabled,
-      volume, 
-      realtimeVolume 
+      volume,
+      realtimeVolume
     };
 
     console.log("Saving settings:", settings);
