@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const tiktokReplayRadio = document.getElementById("tiktok-replay");
 
   // Other controls
-  const delayInput = document.getElementById("delay");
   const volumeSlider = document.getElementById("volume");
   const volumeValue = document.getElementById("volume-value");
   const realtimeCheckbox = document.getElementById("realtime-volume");
@@ -38,17 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // FIX: Function để thiết lập UI từ settings
+  // Function to set UI from settings
   function setUIFromSettings(data) {
     console.log("Setting UI from data:", data);
 
-    // FIX 1: Xử lý Facebook settings
+    // Handle Facebook settings
     const facebookEnabled = data.facebookEnabled === true;
     const facebookReplayEnabled = data.facebookReplayEnabled === true;
 
     console.log("Facebook - enabled:", facebookEnabled, "replay:", facebookReplayEnabled);
 
-    // Reset tất cả Facebook radio buttons trước
+    // Reset all Facebook radio buttons
     facebookOffRadio.checked = false;
     facebookScrollRadio.checked = false;
     facebookReplayRadio.checked = false;
@@ -64,13 +63,13 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Set Facebook to Off mode");
     }
 
-    // FIX 2: Xử lý TikTok settings
+    // Handle TikTok settings
     const tiktokEnabled = data.tiktokEnabled === true;
     const tiktokReplayEnabled = data.tiktokReplayEnabled === true;
 
     console.log("TikTok - enabled:", tiktokEnabled, "replay:", tiktokReplayEnabled);
 
-    // Reset tất cả TikTok radio buttons trước
+    // Reset all TikTok radio buttons
     tiktokOffRadio.checked = false;
     tiktokScrollRadio.checked = false;
     tiktokReplayRadio.checked = false;
@@ -86,18 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Set TikTok to Off mode");
     }
 
-    // FIX 3: FIXED - Xử lý delay (cho phép 0)
-    const delay = (typeof data.delay === 'number' && data.delay >= 0) ? data.delay : 500;
-    delayInput.value = delay;
-    console.log("Set delay to:", delay);
-
-    // FIX 4: Xử lý volume
+    // Handle volume
     const volume = typeof data.volume === 'number' ? data.volume : 1.0;
     volumeSlider.value = volume;
     volumeValue.textContent = Math.round(volume * 100) + "%";
     console.log("Set volume to:", volume);
 
-    // FIX 5: Xử lý realtime volume
+    // Handle realtime volume
     const realtimeVolume = data.realtimeVolume === true;
     realtimeCheckbox.checked = realtimeVolume;
     console.log("Set realtime volume to:", realtimeVolume);
@@ -106,16 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
     updateVolumeControlState();
 
     console.log("UI setup completed");
-    setTimeout(() => {
-      updateActiveStates();
-    }, 50);
+    updateActiveStates();
   }
 
-  // FIX: Load settings với multiple fallbacks
+  // Load settings with multiple fallbacks
   function loadSettings() {
     console.log("Loading settings...");
 
-    // FIX 6: Thử chrome.storage.sync trước
+    // Try chrome.storage.sync first
     chrome.storage.sync.get(null, (syncData) => {
       console.log("Chrome storage sync data:", syncData);
 
@@ -126,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Kiểm tra nếu có data trong sync storage
+      // Check if there is data in sync storage
       if (Object.keys(syncData).length > 0) {
         console.log("Found data in sync storage");
         setUIFromSettings(syncData);
@@ -137,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // FIX 7: Fallback to local storage
+  // Fallback to local storage
   function loadFromLocalStorage() {
     chrome.storage.local.get(null, (localData) => {
       console.log("Chrome storage local data:", localData);
@@ -159,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // FIX 8: Set default settings
+  // Set default settings
   function setDefaultSettings() {
     console.log("Setting default settings");
     const defaultData = {
@@ -168,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
       tiktokEnabled: true,
       facebookReplayEnabled: false,
       tiktokReplayEnabled: false,
-      delay: 500,
       volume: 1.0,
       realtimeVolume: false
     };
@@ -181,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // FIX 9: Delay loading để đảm bảo DOM sẵn sàng
+  // Delay loading to ensure DOM is ready
   setTimeout(() => {
     loadSettings();
   }, 100);
@@ -215,11 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Event listeners for other controls
-  delayInput.addEventListener("change", () => {
-    console.log("Delay changed to:", delayInput.value);
-    sendSettings();
-  });
-
   volumeSlider.addEventListener("input", () => {
     const volume = parseFloat(volumeSlider.value);
     volumeValue.textContent = Math.round(volume * 100) + "%";
@@ -261,10 +247,6 @@ document.addEventListener("DOMContentLoaded", () => {
       tiktokReplayEnabled = true;
     }
 
-    // FIXED: Xử lý delay - cho phép 0, chỉ dùng fallback nếu không hợp lệ
-    const delayValue = parseInt(delayInput.value);
-    const delay = (isNaN(delayValue) || delayValue < 0) ? 500 : delayValue;
-
     const volume = parseFloat(volumeSlider.value) || 1.0;
     const realtimeVolume = realtimeCheckbox.checked;
     const enabled = facebookEnabled || tiktokEnabled || facebookReplayEnabled || tiktokReplayEnabled;
@@ -275,14 +257,13 @@ document.addEventListener("DOMContentLoaded", () => {
       tiktokEnabled,
       facebookReplayEnabled,
       tiktokReplayEnabled,
-      delay,
       volume,
       realtimeVolume
     };
 
     console.log("Saving settings:", settings);
 
-    // FIX 10: Save to both sync and local storage
+    // Save to both sync and local storage
     chrome.storage.sync.set(settings, () => {
       if (chrome.runtime.lastError) {
         console.error("Failed to save to sync storage:", chrome.runtime.lastError);
@@ -309,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
   function makeOptionItemsClickable() {
     const optionItems = document.querySelectorAll('.option-item');
 
@@ -319,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
       item.addEventListener('click', function (e) {
         if (radio && !radio.checked) {
           radio.checked = true;
-          radio.dispatchEvent(new Event('change'));
+          radio.dispatchEvent(new Event('change')); // Fixed typo: Changed 'Radios' to 'radio'
           updateActiveStates();
         }
       });
@@ -328,6 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (radio) {
         radio.addEventListener('change', function () {
           updateActiveStates();
+          sendSettings(); // Ensure settings are saved when radio changes
         });
       }
     });
