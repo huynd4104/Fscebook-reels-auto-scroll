@@ -37,23 +37,27 @@ function isReplayEnabledForCurrentPlatform() {
 }
 
 function clickNextButton(attempt = 1, maxAttempts = 3) {
-  let nextButton = document.querySelector('[aria-label="Thẻ tiếp theo"][role="button"]');
-  if (!nextButton) {
+  let nextButton = null;
+  const platform = getCurrentPlatform();
+
+  if (platform === 'facebook') {
+    // Try multiple selectors for Facebook Reels "Next" button
+    nextButton = document.querySelector('[aria-label="Thẻ tiếp theo"][role="button"]') ||
+                 document.querySelector('div[aria-label="Thẻ tiếp theo"] svg[fill="currentColor"]')?.closest('[role="button"]') ||
+                 document.querySelector('div[aria-label="Thẻ tiếp theo"]');
+  } else if (platform === 'tiktok') {
     nextButton = document.querySelector('button[data-e2e="arrow-right"]');
   }
 
   if (nextButton) {
-    console.log(`Đã tìm thấy nút Next, đang click... (Thử ${attempt}/${maxAttempts})`);
     nextButton.click();
   } else {
-    console.warn(`Không tìm thấy nút Next! (Thử ${attempt}/${maxAttempts})`);
     if (attempt < maxAttempts) {
       setTimeout(() => clickNextButton(attempt + 1, maxAttempts), 500);
     } else {
-      console.error("Không thể tìm thấy nút Next sau nhiều lần thử!");
       chrome.runtime.sendMessage({
         action: "showError",
-        message: "Không thể chuyển video tiếp theo. Vui lòng kiểm tra lại trang."
+        message: `Không thể chuyển video tiếp theo trên ${platform}. Vui lòng kiểm tra lại trang.`
       });
     }
   }
@@ -61,10 +65,8 @@ function clickNextButton(attempt = 1, maxAttempts = 3) {
 
 function replayCurrentVideo(video) {
   if (video) {
-    console.log("Đang replay video...");
     video.currentTime = 0;
     video.play().catch((error) => {
-      console.error("Lỗi khi replay video:", error);
       chrome.runtime.sendMessage({
         action: "showError",
         message: "Không thể phát lại video. Vui lòng thử lại."
@@ -86,7 +88,6 @@ function watchReelVideos() {
 
   const container = getVideoContainer();
   if (!container) {
-    console.warn("Không tìm thấy container video!");
     chrome.runtime.sendMessage({
       action: "showError",
       message: "Không tìm thấy khu vực video trên trang."
@@ -154,8 +155,6 @@ chrome.storage.sync.get([
   "volume",
   "realtimeVolume"
 ], (data) => {
-  console.log("Content script loaded settings:", data);
-
   if (typeof data.facebookEnabled === 'boolean') {
     facebookAutoScrollEnabled = data.facebookEnabled;
   }
@@ -190,7 +189,6 @@ chrome.storage.sync.get([
 
   if (!chrome.runtime.lastError) {
     chrome.storage.local.clear(() => {
-      console.log("Đã xóa dữ liệu chrome.storage.local để tối ưu hóa.");
     });
   }
 
@@ -199,7 +197,6 @@ chrome.storage.sync.get([
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "updateSettings") {
-    console.log("Content script received settings update:", message);
 
     if (checkStorageQuota(message)) {
       if (typeof message.enabled === 'boolean') {
